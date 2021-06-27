@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Col, Row } from "react-bootstrap";
 import { RouteProps } from "react-router-dom";
 import styled from "styled-components";
 const Title = styled.h1`
@@ -28,20 +29,24 @@ export interface DashBoardState {
 }
 
 export const DashBoard: React.FC<RouteProps> = (props: RouteProps) => {
-    const [msg, Setmsg] = React.useState<any>();
+    const [msg, Setmsg] = React.useState<any>({});
+    let pollutionObject:any = {};
     let ws = new WebSocket('ws://city-ws.herokuapp.com');
+
   React.useEffect(() => {
     ws.onopen = () => console.log('ws opened');
     ws.onclose = () => console.log('ws closed');  
     ws.onmessage = (e:any) => {
       const message = JSON.parse(e.data);
-      Setmsg(message);
+      Array.isArray(message) && message.forEach((ms:any)=>{
+        pollutionObject[ms.city]= ms.aqi;
+      })
+      Setmsg((prev:any) => {return {...prev, ...pollutionObject}});
     };
     return () => {
       ws.close();
     }
   }, []);
-
 
 
     return (
@@ -50,13 +55,13 @@ export const DashBoard: React.FC<RouteProps> = (props: RouteProps) => {
           Welcome to Air Quality Index
         </Title>
         <CenterDiv>
-          {Array.isArray(msg) && msg.map((ms:any)=>{
-           return(
-           <>
-              <div>{ms.city}</div>
-              <div> {ms.aqi} </div>
-            </>
-           )
+          {Object.keys(msg).map((key, i) => {
+            return(
+              <Row key={i}>
+                <Col>{key}</Col>
+                <Col>{msg[key]}</Col>
+              </Row>
+            )
           })}
         </CenterDiv>
       </>
