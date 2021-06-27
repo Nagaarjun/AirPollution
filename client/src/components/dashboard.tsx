@@ -18,10 +18,27 @@ const CenterDiv = styled.div`
   width: 70%;
   overflow-y: scroll;
 `;
-const Item = styled.div`
-  height: 20px;
+
+const Green = styled(Col)`
+  color:green;
 `;
 
+const Lightgreen = styled(Col)`
+  color:lightgreen;
+`;
+
+const Yellow = styled(Col)`
+  color:yellow;
+`;
+const Orange = styled(Col)`
+  color:orange;
+`;
+const Lightred = styled(Col)`
+  color:lightred;
+`;
+const Red = styled(Col)`
+  color:red;
+`;
 
 export interface DashBoardProps {
 }
@@ -48,6 +65,15 @@ export const DashBoard: React.FC<RouteProps> = (props: RouteProps) => {
     }
   }, []);
 
+  const getClassName = (value:number)=>{
+    if(value>=0 && value<=50) return "green"
+    if(value>=51 && value<=100) return "lightgreen"
+    if(value>=101 && value<=200) return "yellow"
+    if(value>=201 && value<=300) return "orange"
+    if(value>=301 && value<=400) return "lightred"
+    if(value>=401 && value<=500) return "red"
+    return "";
+  }
 
     return (
       <>
@@ -59,7 +85,12 @@ export const DashBoard: React.FC<RouteProps> = (props: RouteProps) => {
             return(
               <Row key={i}>
                 <Col>{key}</Col>
-                <Col>{msg[key]}</Col>
+                {msg[key]>=0 && msg[key]<=50 && <Green>{msg[key]}</Green>}
+                {msg[key]>=51 && msg[key]<=100 && <Lightgreen>{msg[key]}</Lightgreen>}
+                {msg[key]>=101 && msg[key]<=200 && <Yellow>{msg[key]}</Yellow>}
+                {msg[key]>=201 && msg[key]<=300 && <Orange>{msg[key]}</Orange>}
+                {msg[key]>=301 && msg[key]<=400 && <Lightred>{msg[key]}</Lightred>}
+                {msg[key]>=401 && msg[key]<=500 && <Red>{msg[key]}</Red>}
               </Row>
             )
           })}
